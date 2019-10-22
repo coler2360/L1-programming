@@ -27,65 +27,72 @@
         var playerYpos = 0;
         var playerXspeed = 4;
         var playerYspeed = 3;
-        var playerSize = 20;
-        
+        const PLAYER_SPEED = 20;
+        const PLAYER_SIZE = 30;
+
         var enenmyCount = 10;
-        
+
         var enemy = [];
 
         // player controls//
         const LEFT_KEY = 37;
         const RIGHT_KEY = 39;
         const SPACE_KEY = 32;
-        
+
         var leftKeyPressed = false;
         var rightKeyPressed = false;
         var spaceKeyPressed = false;
-        
-        
-        var bulletWidth = 10;
-        var buletHeight = 20;
+
+        //Bullet Variable//
+        const BULLET_WIDTH = 5;
+        const BULLET_HEIGHT = 10;
         var bulletXpos = 0;
         var bulletYpos = 0;
         var bulletYspeed = -5;
-    
+
         var shooting = false;
-        
-      
+
+
 
         var startingPos = true;
         
-        var enemy =new Image();
-        enemy.src = 'images/enemy.png';
-        
-        var player =new Image();
-        player.src = 'images/ship.png';
-         
+//        var alien = new Image();
+//        alien.src = 'images/yah.png';
+
+        var player = new Image();
+        player.src = 'images/yah.png';
+
+
+
 
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); //background  // 
 
-            colorRect(bulletXpos, bulletYpos, bulletWidth, buletHeight, 'white'); // player
-            colorRect(playerXpos, playerYpos, playerSize, playerSize, 'red'); // player
-            drawImg(enemy, 0,0,30,30);
+            colorRect(bulletXpos, bulletYpos, BULLET_WIDTH, BULLET_HEIGHT, 'white');
+
+            drawImg(player, playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE);
+
+            //            moveAliens(alienXpos, alienYpos, alienYspeed, alienSize, alienSize);
 
             playerMove();
-            //bricksDraw();//
-            //bricksMove();
             bulletShoot();
 
-            if (startingPos)
-                startPos();
-            startingPos = false;
+            drawAliens();
+//            moveAliens();
 
+            if (startingPos) {
+
+                startPos();
+                startingPos = false;
+            }
         }
         //starting position for player//
         function startPos() {
-            playerXpos = canvas.width / 2 - playerSize / 2;
-            playerYpos = canvas.height - playerSize * 2;
+            playerXpos = canvas.width / 2 - PLAYER_SIZE / 2;
+            playerYpos = canvas.height - PLAYER_SIZE * 2;
         }
 
-        function keyReleased(evt) { 
+        function keyReleased(evt) {
             if (evt.keyCode == LEFT_KEY) {
                 leftKeyPressed = false;
             }
@@ -112,46 +119,101 @@
 
 
         function playerMove() {
-            if (rightKeyPressed && playerXpos < canvas.width - playerSize) {
+            if (rightKeyPressed && playerXpos < canvas.width - PLAYER_SIZE) {
                 playerXpos += playerXspeed; // x move
             }
             if (leftKeyPressed) {
                 playerXpos -= playerXspeed; // x move
-                if (playerXpos < 0 - playerSize) {
-                    playerXpos = canvas.width - playerSize / 2;
+                if (playerXpos < 0 - PLAYER_SIZE) {
+                    playerXpos = canvas.width - PLAYER_SIZE / 2;
                 }
             }
         }
-        
-        function bulletShoot(){
-//            bulletYpos += bulletYspeed;
-            
-            if(spaceKeyPressed ){
+
+        function bulletShoot() {
+            //            bulletYpos += bulletYspeed;
+
+            if (spaceKeyPressed) {
                 bulletXpos = playerXpos;
                 bulletYpos = playerYpos;
                 shooting = true;
-               
+
             }
-                if(shooting){
-                    bulletYpos += bulletYspeed;
-                    
-                    if(bulletYpos - buletHeight < 0){
-                       shooting = false;
-                        bulletXpos = 0;
-                        bulletYpos = 0;
-                    }
+            if (shooting) {
+                bulletYpos += bulletYspeed;
+
+                if (bulletYpos - bulletHeight < 0) {
+                    shooting = false;
+                    bulletXpos = 0;
+                    bulletYpos = 0;
                 }
-        }        
-        
-        function drawImg(img, x, y, w, h) {
-            canvasContext.drawImage(img, x, y, w, h);
+            }
+        }
+
+        var Totalenemies = 32;
+        var alienRowCount = 0;
+        var aliens = [];
+        var alienCount = 0;
+
+        for (i = 0; i < Totalenemies; i++) {
+            makeAliens();
+        }
+
+
+        function makeAliens() {
+            const ALIEN_SIZE = 30;
+            const gap = 10;
+            var alienYpos = 10;
+            var alienYspeed = 10;
+            var alienXspeed = 3;
+            var alienXpos = 0;
+
+            if (alienCount != 0 && alienCount % 8 == 0) {
+                alienRowCount++;
+                alienYpos = ALIEN_SIZE * (alienRowCount * 1.5);
+                alienXpos = alienCount % 8 * (ALIEN_SIZE * 1.5) + ALIEN_SIZE * .6;
+                console.log(alienRowCount)
+            } else {
+                alienXpos = alienCount % 8 * (ALIEN_SIZE * 1.5) + ALIEN_SIZE * .6;
+                alienYpos = ALIEN_SIZE * (alienRowCount * 1.5);
+                console.log(alienRowCount)
+            }
+            alienCount++;
+
+            alien = {
+                ALIEN_SIZE: ALIEN_SIZE,
+                alienXpos: alienXpos,
+                alienYpos: alienYpos,
+                alienYspeed: alienYspeed,
+                alienXspeed: alienXspeed
+            }
+            aliens.push(alien);
+        }
+
+        function drawAliens() {
+            aliens.forEach(function(alien, i) {
+                colorRect(alien.alienXpos, alien.alienYpos, alien.ALIEN_SIZE, alien.ALIEN_SIZE,'red');
+            });
+        }
+
+        function moveAliens() {
+            aliens.forEach(function(alien, i) {
+                alien.alienYpos += alien.alienYspeed;
+                if (alien.alienYpos > canvas.height) {
+                    alien.alienYpos = 0 - alien.ALIEN_SIZE;
+                    alien.alienYspeed = 5;
+                }
+            });
+        }
+
+        function drawImg(src, x, y, w, h) {
+            canvasContext.drawImage(src, x, y, w, h);
         }
 
         function colorRect(x, y, w, h, c) {
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
         }
-
 
     </script>
 </body>
