@@ -21,6 +21,33 @@
             setInterval(mainloop, 1000 / 50);
 
         }
+        var alienYspeedMain = 0;
+        
+        var difficulty = '';
+        var pass = false;
+        
+        while(pass == false){
+            difficulty = prompt('what  do you want the game? easy or hard'); 
+            if(difficulty.toLowerCase() == 'easy' || difficulty.toLowerCase() == 'hard'){
+                pass = true;               
+            }
+        }
+       // end of 
+        
+        if (difficulty == 'easy') {
+            alienYspeedMain = 0.04;
+        }else {
+            alienYspeedMain = 0.10;
+        }
+        //end of alien diffuculty speed var//
+        
+        
+        
+        
+        
+        
+        
+        
 
         // player variables//
         var playerXpos = 0;
@@ -56,11 +83,15 @@
 
         var startingPos = true;
         
-//        var alien = new Image();
-//        alien.src = 'images/yah.png';
+        var alien = new Image();
+       alien.src = 'images/Alien.png';
 
         var player = new Image();
         player.src = 'images/yah.png';
+        
+        var difficulty = '';
+        var pass = false;
+
 
 
 
@@ -78,7 +109,7 @@
             bulletShoot();
 
             drawAliens();
-//            moveAliens();
+           moveAliens();
 
             if (startingPos) {
 
@@ -130,10 +161,12 @@
             }
         }
 
+
+        
         function bulletShoot() {
             //            bulletYpos += bulletYspeed;
 
-            if (spaceKeyPressed) {
+            if (spaceKeyPressed && shooting == false) {
                 bulletXpos = playerXpos;
                 bulletYpos = playerYpos;
                 shooting = true;
@@ -142,12 +175,24 @@
             if (shooting) {
                 bulletYpos += bulletYspeed;
 
-                if (bulletYpos - bulletHeight < 0) {
+                if (bulletYpos - BULLET_HEIGHT < 0) {
                     shooting = false;
                     bulletXpos = 0;
                     bulletYpos = 0;
                 }
             }
+        }
+        
+        
+        if (difficulty == 'easy') {
+            alienYpeed = 10;
+            
+            
+        }
+        
+        
+         if (difficulty == 'hard') {
+           alienYpeed = 60;
         }
 
         var Totalenemies = 32;
@@ -164,7 +209,7 @@
             const ALIEN_SIZE = 30;
             const gap = 10;
             var alienYpos = 10;
-            var alienYspeed = 10;
+            var alienYspeed = alienYspeedMain;
             var alienXspeed = 3;
             var alienXpos = 0;
 
@@ -192,16 +237,19 @@
 
         function drawAliens() {
             aliens.forEach(function(alien, i) {
-                colorRect(alien.alienXpos, alien.alienYpos, alien.ALIEN_SIZE, alien.ALIEN_SIZE,'red');
+                colorRect(alien.alienXpos, alien.alienYpos, alien.ALIEN_SIZE, alien.ALIEN_SIZE,);
             });
-        }
-
+        } // end drawAliens func `
+        
         function moveAliens() {
             aliens.forEach(function(alien, i) {
-                alien.alienYpos += alien.alienYspeed;
+    
+                    alien.alienYpos += alien.alienYspeed;
+        
                 if (alien.alienYpos > canvas.height) {
                     alien.alienYpos = 0 - alien.ALIEN_SIZE;
-                    alien.alienYspeed = 5;
+                    alien.alienYspeed = alienYspeedMain;
+                    console.log
                 }
             });
         }
