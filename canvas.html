@@ -38,22 +38,22 @@
                 pass = true;
             }
         }
-        
-        
+
+
         var userName = '';
         var userPass = false;
-        while(userPass == false){
+        while (userPass == false) {
             userName = prompt("Please enter your username, max length 10", "player");
-            if(userName != null && userName != ''){
-                if(userName.length <= 10){
+            if (userName != null && userName != '') {
+                if (userName.length <= 10) {
                     userPass = true;
                 }
             }
         }
-        
-        
-        
-    
+
+
+
+
         // end of diffuculty prompt//
 
 
@@ -100,6 +100,9 @@
         var bulletXpos = 0;
         var bulletYpos = 0;
         var bulletYspeed = -5;
+        var bullet = [];
+        const BULLET_SIZE = 15;
+
 
         var shooting = false;
         //end of bullet variables//
@@ -110,7 +113,7 @@
 
         var alienYpos = 0;
         var alienXpos = 0;
-        const ALIEN_SIZE = 30;
+        const ALIEN_SIZE = 32;
 
         var eBulletYpos = 0;
         var eBulletXpos = 0;
@@ -129,6 +132,7 @@
 
         var difficulty = '';
         var pass = false;
+
 
 
 
@@ -167,8 +171,8 @@
                 }
 
                 colorText('score:' + score, 10, 20, '20pxArial', 'white');
-       
-                if(userName > 10){
+
+                if (userName > 10) {
                     userName == false;
                 }
 
@@ -271,15 +275,17 @@
 
                 if (eBullet.eBulletXpos + eBullet.EBULLET_SIZE > playerXpos && eBullet.eBulletXpos < playerXpos + PLAYER_SIZE && eBullet.eBulletYpos + eBullet.EBULLET_SIZE > playerYpos && eBullet.eBulletYpos < playerYpos + PLAYER_SIZE) {
                     playerXpos = 0;
+                    death++;
                 }
 
             });
         } //end of eBullet move function//
 
 
-        if (eBulletYpos + EBULLET_SIZE > playerYpos && eBulletYpos < playerYpos + PLAYER_SIZE && eBulletXpos + EBULLET_SIZE > playerXpos && eBulletXpos < playerXpos + PLAYER_SIZE) {
-            console.log('hit')
-        }
+
+
+
+
 
         //playershoot functions//
         function bulletShoot() {
@@ -300,8 +306,27 @@
                     bulletYpos = 0;
                 }
             }
+            
+            
+            if (bulletYpos + BULLET_SIZE > alien.alienYpos && bulletYpos < alien.alienYpos + alien.ALIEN_SIZE && bulletXpos + BULLET_SIZE > alien.alienXpos && bulletXpos < alien.alienXpos + alien.ALIEN_SIZE) {
+                    bulletYpos = -100;
+                    
+                }
+
         }
+
+
+
+
+
+
         //end of playershoot functions//
+
+
+
+
+
+
 
 
 
@@ -363,14 +388,25 @@
                     death++;
 
                 } //end of alien move functions//
+
+                if (alien.alienYpos + alien.ALIEN_SIZE > bulletYpos && alien.alienYpos < bulletYpos + BULLET_SIZE && alien.alienXpos + alien.ALIEN_SIZE > bulletXpos && alien.alienXpos < bulletXpos + BULLET_SIZE) {
+                    alien.alienYpos = 0;
+                  
+                    score++;
+                }
+
             });
 
         } //end of alien(enemy) code//
 
 
-        if (alienYpos + ALIEN_SIZE > playerYpos && alienYpos < playerYpos + PLAYER_SIZE && alienXpos + ALIEN_SIZE > playerXpos && alienXpos < playerXpos + PLAYER_SIZE) {
-            co
-        }
+
+
+
+
+        // if (alienYpos + ALIEN_SIZE > playerYpos && alienYpos < playerYpos + PLAYER_SIZE && alienXpos + ALIEN_SIZE > playerXpos && alienXpos < playerXpos + PLAYER_SIZE) {
+
+        //}
 
 
         function drawImg(src, x, y, w, h) {
